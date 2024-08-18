@@ -15,7 +15,7 @@ const NUM_CHOICES = 4;
 export default function Quiz({ words }: Props) {
   const [sourceWord, setSourceWord] = useState('');
   const [correctAnswer, setCorrectAnswer] = useState('');
-  const [currentWordIndex, setCurrentWordIndex] = useState(0);
+  const [, setCurrentWordIndex] = useState(0);
   const [choices, setChoices] = useState<string[]>([]);
   const [blockAnswering, setBlockAnswering] = useState(false);
   const [score, setScore] = useState(0);
@@ -49,7 +49,7 @@ export default function Quiz({ words }: Props) {
       // Fill the remaining choices
       let attempts = 0;
       const maxAttempts = 100;
-      while (newChoices.length < 4 && attempts < maxAttempts) {
+      while (newChoices.length < NUM_CHOICES && attempts < maxAttempts) {
         const randomWord = words[Math.floor(Math.random() * words.length)];
         const choice = isHebrew ? randomWord.arabic : randomWord.hebrew;
   
