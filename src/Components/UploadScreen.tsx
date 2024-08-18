@@ -1,15 +1,25 @@
 import { useRef } from 'react';
 import './UploadScreen.css';
 import { parseCSV } from '../Utils/fileUtils';
-import { Word } from '../types';
+import { VocabFile, Word } from '../types';
 
-interface UploadScreenProps {
+interface Props {
   setWords: (words: Word[]) => void;
   startGame: () => void;
 }
 
-export default function UploadScreen({ setWords, startGame }: UploadScreenProps) {
+const vocabFiles: VocabFile[] = [
+    { name: "מדרסה", path: './vocabulary-files/madrasa.csv'},
+    { name: "מילים פופולריות", path: './vocabulary-files/most-searched-words.csv'},
+    { name: "שמות עצם", path: './vocabulary-files/nouns.csv'},
+    { name: "מילות יחס וקישור", path: './vocabulary-files/prepositions.csv'},
+    { name: "פעלים", path: './vocabulary-files/verbs.csv'},
+    { name: "אוצר מילים", path: './vocabulary-files/vocabulary.csv'},
+]
+
+export default function UploadScreen({ setWords, startGame }: Props) {
     const fileInputRef = useRef<HTMLInputElement>(null);
+    const fileDropdownRef = useRef<HTMLSelectElement>(null);
 
     const handleButtonClick = () => {
         if (fileInputRef.current) {
@@ -33,6 +43,19 @@ export default function UploadScreen({ setWords, startGame }: UploadScreenProps)
         }
     };
 
+    function loadPredefinedFile() {
+        const file = fileDropdownRef.current!.value;
+
+        fetch(file)
+        .then(response => response.text())
+        .then(data => {
+            const words = parseCSV(data);
+            setWords(words);
+            startGame();
+        })
+        .catch(error => console.error('Error fetching the file:', error));
+    }
+
     return (
       <div className='upload-container'>
         <input
@@ -45,6 +68,13 @@ export default function UploadScreen({ setWords, startGame }: UploadScreenProps)
         <button className="btn" onClick={handleButtonClick}>
             העלה קובץ
         </button>
+        <h2>או</h2>
+        <div className="select-file-container">
+            <select name="select-file" id="select-file" ref={fileDropdownRef}>
+                {vocabFiles.map((file, index) => <option key={index} value={file.path}>{file.name}</option>)}
+            </select>
+            <button className='select-file-btn' onClick={loadPredefinedFile}>בחר</button>
+        </div>
       </div>
     );
 }

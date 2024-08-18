@@ -3,6 +3,7 @@
     height: 100svh;
     justify-content: center;
     align-items: center;
+    flex-direction: column;
 }
 
 input[type="file"] {
@@ -23,6 +24,55 @@ input[type="file"] {
 }
 
 .btn:hover {
+    transform: translateY(5px);
+    box-shadow: none;
+}
+
+h2 {
+    color: white;
+    margin: 32px;
+}
+
+.select-file-container {
+    display: flex;
+    gap: 8px;
+}
+
+select {
+    padding: 16px 24px;
+    font-size: 1.2rem;
+    border-radius: 5rem;
+    border: none;
+    background-color: var(--primary);
+    color: black;
+    font-family: 'Rubik', sans-serif;
+    font-weight: 100;
+    box-shadow: 0px 5px rgba(199, 139, 49, 0.6);
+    transition: 0.1s;
+    cursor: pointer;
+}
+
+select:hover {
+    transform: translateY(5px);
+    box-shadow: none;
+}
+
+.select-file-btn {
+    padding: 8px 16px;
+    border-radius: 1rem;
+    background-color: var(--primary);
+    filter: brightness(1);
+    border: none;
+    color: black;
+    font-family: 'Rubik', sans-serif;
+    font-size: 1rem;
+    font-weight: 600;   
+    box-shadow: 0px 5px rgba(199, 139, 49, 0.6);
+    transition: 0.1s;
+    cursor: pointer;
+}
+
+.select-file-btn:hover {
     transform: translateY(5px);
     box-shadow: none;
 }
