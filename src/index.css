@@ -16,7 +16,8 @@ body {
     background-color: var(--background);
     font-family: "Rubik", sans-serif;
     padding: 5%;
-    overflow: hidden;
+    /* overflow: hidden; */
     height: 100svh;
     width: 100vw;
+    touch-action: manipulation;
 }

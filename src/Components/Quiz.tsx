@@ -25,7 +25,7 @@ export default function Quiz({ words }: Props) {
   const [level, setLevel] = useState(1);
   const [progress, setProgress] = useState(0);
   const [levelUpScore, setLevelUpScore] = useState(3);
-
+  
   useEffect(() => {
     if (words.length > 0) {
       nextWord(); // Initialize with the first word
