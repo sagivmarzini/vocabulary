@@ -9,7 +9,12 @@ interface Props {
 
 const ChoiceButton = forwardRef<HTMLButtonElement, Props>(({ children, onClick }: Props, ref) => {
   return (
-    <button onClick={onClick} className="choice-btn" ref={ref}>
+    <button 
+    onClick={onClick} 
+    className="choice-btn" 
+    ref={ref}
+    aria-label={`Choose ${children}`}
+    role='option'>
       {children}
     </button>
   );
