@@ -10,13 +10,14 @@
     text-align: center;
     margin: 80px 0px;
     position: relative;
-    animation: pop-up 0.7s;
+    /* animation: pop-up 0.3s; */
 }
 
 @keyframes pop-up {
     from {
+        opacity: 0;
         transform: translateY(150%);
-    }
+    }   
     to {
         transform: none;
     }

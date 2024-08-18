@@ -59,7 +59,6 @@ export default function Quiz({ words }: Props) {
   }
 
   function checkAnswer(event: React.MouseEvent<HTMLButtonElement>) {
-    
     const userAnswer = event.currentTarget.innerText;
     
     if (userAnswer === correctAnswer) {
