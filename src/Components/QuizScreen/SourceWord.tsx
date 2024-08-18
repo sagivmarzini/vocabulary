@@ -13,7 +13,7 @@ export default function SourceWord({ children}: Props) {
       {transform: 'translateY(50%)', opacity: 0, /* letterSpacing: '5px' */},
       {tranform: 'none'}
     ], {
-      duration: 400,
+      duration: 300,
       easing: 'ease'
     })
   }, [children])
