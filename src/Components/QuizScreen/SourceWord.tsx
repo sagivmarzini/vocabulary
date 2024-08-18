@@ -9,14 +9,6 @@ export default function SourceWord({ children}: Props) {
   const textRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // Fade-in from bottom animation
-    // textRef.current?.animate([
-    //   {transform: 'translateY(50%)', opacity: 0, /* letterSpacing: '5px' */},
-    //   {tranform: 'none'}
-    // ], {
-    //   duration: 300,
-    //   easing: 'ease'
-    // })
     textRef.current?.animate([
         {transform: 'translateY(100%)'},
         {transform: 'none'}
