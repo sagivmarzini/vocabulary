@@ -18,6 +18,5 @@ body {
     padding: 5%;
     /* overflow: hidden; */
     height: 100svh;
-    width: 100vw;
     touch-action: manipulation;
 }
