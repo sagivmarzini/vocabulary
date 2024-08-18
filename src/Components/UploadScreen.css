@@ -1,0 +1,28 @@
+.upload-container {
+    display: flex;
+    height: 100svh;
+    justify-content: center;
+    align-items: center;
+}
+
+input[type="file"] {
+    display: none;
+}
+
+.btn {
+    padding: 16px 32px;
+    font-size: 2rem;
+    border-radius: 5rem;
+    border: none;
+    background-color: var(--primary);
+    color: black;
+    font-family: 'Rubik', sans-serif;
+    box-shadow: 0px 5px rgba(199, 139, 49, 0.6);
+    transition: 0.1s;
+    cursor: pointer;
+}
+
+.btn:hover {
+    transform: translateY(5px);
+    box-shadow: none;
+}
