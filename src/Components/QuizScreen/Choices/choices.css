@@ -1,14 +1,19 @@
 .choices-container {
-    display: flex;
-    flex-direction: column;
+    display: grid;
     gap: 1rem;   
+}
+
+@media (min-width: 600px) {
+    .choices-container {
+        grid-template-columns: repeat(2, 1fr);
+    }
 }
 
 .choice-btn {
     font-family: 'Rubik', sans-serif;
     padding: 16px;
-    font-size: 1.5rem;
-    font-weight: 500;
+    font-size: 1.3rem;
+    font-weight: 400;
     border-radius: 1.5rem;
     border: none;
     background-color: var(--primary);
