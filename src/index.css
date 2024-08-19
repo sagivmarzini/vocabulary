@@ -20,3 +20,27 @@ body {
     height: 100svh;
     touch-action: manipulation;
 }
+
+.reset-btn {
+    position: absolute;
+    bottom: 16px;
+    right: 50%;
+    transform: translateX(50%);
+    font-size: 1rem;
+    color: white;
+    font-family: 'Rubik', sans-serif;
+    font-weight: 200;
+    padding: 8px 24px;
+    border-radius: 5rem;
+    border: none;
+    background-color: #383838;
+    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.reset-btn:hover {
+    background-color: lightgray;
+    color: black;
+    box-shadow: 0 0 10px 5px rgba(0, 0, 0, 0.2);
+}
