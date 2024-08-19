@@ -21,7 +21,9 @@ export default function SourceWord({ children}: Props) {
   return (
     <>
         <div className='word-container'>
+          <div className="word-mask">
             <div className="word" ref={textRef} >{children}</div>
+          </div>
         </div>
     </>
   )
