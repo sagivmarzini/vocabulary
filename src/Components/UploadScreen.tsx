@@ -2,6 +2,7 @@ import { useRef } from 'react';
 import './UploadScreen.css';
 import { parseCSV } from '../Utils/fileUtils';
 import { VocabFile, Word } from '../types';
+import { shuffleArray } from '../Utils/utils';
 
 interface Props {
   setWords: (words: Word[]) => void;
@@ -35,7 +36,7 @@ export default function UploadScreen({ setWords, startGame }: Props) {
             reader.onload = (e) => {
                 const csvText = e.target?.result as string;
                 const parsedWords = parseCSV(csvText);
-                setWords(parsedWords); // Update words in App component
+                setWords(shuffleArray(parsedWords)); // Update words in App component
                 startGame(); // Start the game after parsing
             };
             
@@ -50,7 +51,7 @@ export default function UploadScreen({ setWords, startGame }: Props) {
         .then(response => response.text())
         .then(data => {
             const words = parseCSV(data);
-            setWords(words);
+            setWords(shuffleArray(words));
             startGame();
         })
         .catch(error => console.error('Error fetching the file:', error));

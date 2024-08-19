@@ -7,22 +7,42 @@ import Stats from "./QuizScreen/Stats"
 import { shuffleArray } from "../Utils/utils"
 
 interface Props {
-  words: Word[]
-};
+  initialWords: Word[];
+  resetGame: () => void;
+}
+
+interface GameState {
+  sourceWord: string
+  correctAnswer: string
+  currentWordIndex: number
+  choices: string[],
+  blockAnswering: boolean
+  score: number
+  streak: number
+  level: number
+  progress: number
+}
 
 const NUM_CHOICES = 4;
 
-export default function Quiz({ words }: Props) {
-  const [sourceWord, setSourceWord] = useState('');
-  const [correctAnswer, setCorrectAnswer] = useState('');
-  const [, setCurrentWordIndex] = useState(0);
-  const [choices, setChoices] = useState<string[]>([]);
-  const [blockAnswering, setBlockAnswering] = useState(false);
-  const [score, setScore] = useState(0);
-  const [streak, setStreak] = useState(0);
-  const [level, setLevel] = useState(1);
-  const [progress, setProgress] = useState(0);
-  const levelUpScore = useMemo(() => 2 * Math.pow(level, 2), [level]);
+export default function Quiz({ initialWords, resetGame }: Props) {
+  const [words] = useState<Word[]>(initialWords);
+  const [gameState, setGameState] = useState(() => {
+    const savedProgress = localStorage.getItem('quizProgress');
+    return savedProgress ? JSON.parse(savedProgress) : {
+      sourceWord: '',
+      correctAnswer: '',
+      currentWordIndex: 0,
+      choices: [],
+      blockAnswering: false,
+      score: 0,
+      streak: 0,
+      level: 1,
+      progress: 0
+    };
+  });
+
+  const levelUpScore = useMemo(() => 2 * Math.pow(gameState.level, 2), [gameState.level]);
 
   const correctSound = useRef(new Audio('./sounds/correct.mp3'));
   const incorrectSound = useRef(new Audio('./sounds/incorrect.mp3'));
@@ -30,83 +50,83 @@ export default function Quiz({ words }: Props) {
   
   useEffect(() => {
     if (words.length > 0) {
-      nextWord(); // Initialize with the first word
+      nextWord(gameState.currentWordIndex);
     }
   }, [words]);
 
-  function nextWord() {
-    setCurrentWordIndex(prevIndex => {
-      const newIndex = (prevIndex + 1) % words.length;
-      const currentWord = words[newIndex];
-      const isHebrew = Math.random() < 0.5;
-  
-      const sourceWord = isHebrew ? currentWord.hebrew : currentWord.arabic;
-      const correctAnswer = isHebrew ? currentWord.arabic : currentWord.hebrew;
-  
-      // Initialize choices with the correct answer
-      const newChoices = [correctAnswer];
-  
-      // Fill the remaining choices
-      let attempts = 0;
-      const maxAttempts = 100;
-      while (newChoices.length < NUM_CHOICES && attempts < maxAttempts) {
-        const randomWord = words[Math.floor(Math.random() * words.length)];
-        const choice = isHebrew ? randomWord.arabic : randomWord.hebrew;
-  
-        if (!newChoices.includes(choice)) {
-          newChoices.push(choice);
-        }
-        attempts++;
+  useEffect(() => {
+    localStorage.setItem('quizProgress', JSON.stringify(gameState));
+  }, [gameState]);
+
+  function nextWord(index: number) {
+    const currentWord = words[index];
+    const isHebrew = Math.random() < 0.5;
+
+    const sourceWord = isHebrew ? currentWord.hebrew : currentWord.arabic;
+    const correctAnswer = isHebrew ? currentWord.arabic : currentWord.hebrew;
+
+    // Populate the question choices
+    const newChoices = [correctAnswer];
+    while (newChoices.length < NUM_CHOICES) {
+      const randomWord = words[Math.floor(Math.random() * words.length)];
+      const choice = isHebrew ? randomWord.arabic : randomWord.hebrew;
+      if (!newChoices.includes(choice)) {
+        newChoices.push(choice);
       }
-  
-      setSourceWord(sourceWord);
-      setCorrectAnswer(correctAnswer);
-      setChoices(shuffleArray(newChoices));
-      setBlockAnswering(false);
-  
-      return newIndex;
-    });
+    }
+
+    setGameState((prevState: GameState) => ({
+      ...prevState,
+      sourceWord,
+      correctAnswer,
+      choices: shuffleArray(newChoices),
+      blockAnswering: false
+    }));
   }
 
   function checkAnswer(event: React.MouseEvent<HTMLButtonElement>) {
     const userAnswer = event.currentTarget.innerText;
     
-    if (userAnswer === correctAnswer) {
-      setBlockAnswering(true);
+    if (userAnswer === gameState.correctAnswer) {
       correctSound.current.play();
       event.currentTarget.classList.add('correct');
-      setStreak(streak => streak + 1);
-      setScore(score => score + 1);
-      setProgress(progress => progress + 1);
-      if (progress + 1 >= levelUpScore) {
-        setProgress(progress => progress + 1);
+      setGameState((prevState: GameState) => {
+        const newProgress = prevState.progress + 1;
+        const newLevel = newProgress > levelUpScore ? prevState.level + 1 : prevState.level;
+        
         setTimeout(() => {
-          levelUp();
-        }, 300);
-      }
+          const newIndex = (prevState.currentWordIndex + 1) % words.length;
+          nextWord(newIndex);
+        }, 1000);
 
-      setTimeout(() => {
-        nextWord();
-      }, 1000);
+        return {
+          ...prevState,
+          score: prevState.score + 1,
+          streak: prevState.streak + 1,
+          level: newLevel,
+          progress: newLevel > prevState.level ? 1 : newProgress,
+          blockAnswering: true,
+          currentWordIndex: (prevState.currentWordIndex + 1) % words.length
+        };
+      });
+
+      if (gameState.progress >= levelUpScore) {
+        setTimeout(() => levelUpSound.current.play(), 300);
+      }
     } else {
       incorrectSound.current.play();
       event.currentTarget.classList.add('incorrect');
-      setStreak(0);
+      setGameState((prevState: GameState) => ({ ...prevState, streak: 0 }));
     }
-  }
-
-  function levelUp() {
-    levelUpSound.current.play();
-    setLevel(level => level + 1);
-    setProgress(0);
   }
   
   return (
-    <>
-        <ProgressBar percentage={progress / levelUpScore * 100}/>
-        <Stats score={score} streak={streak} level={level}/>
-        <SourceWord>{sourceWord || ''}</SourceWord>
-        <Choices checkAnswer={blockAnswering ? () => {} : checkAnswer} choices={choices}></Choices>
-    </>
-  )
+    <div className="game-container">
+      <ProgressBar percentage={gameState.progress / levelUpScore * 100}/>
+      <Stats score={gameState.score} streak={gameState.streak} level={gameState.level}/>
+      <SourceWord>{gameState.sourceWord || ''}</SourceWord>
+      <Choices checkAnswer={gameState.blockAnswering ? () => {} : checkAnswer} choices={gameState.choices}></Choices>
+      <button className="reset-btn" onClick={resetGame}>איפוס משחק</button>
+    </div>
+  );
 }

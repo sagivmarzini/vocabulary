@@ -2,23 +2,35 @@ import { useEffect, useState } from "react";
 import Quiz from "./Components/Quiz";
 import UploadScreen from "./Components/UploadScreen";
 import { Word } from "./types";
-import { shuffleArray } from "./Utils/utils";
 
 function App() {
-  const [gameRunning, setGameRunning] = useState(false);
-  const [words, setWords] = useState<Word[]>([]);
-  const [shuffledWords, setShuffledWords] = useState<Word[]>([]);
+  const [gameState, setGameState] = useState<{gameRunning: boolean, words: Word[]}>(() => {
+    const savedState = localStorage.getItem('gameState');
+    return savedState ? JSON.parse(savedState) : { gameRunning: false, words: [] };
+  });
 
   useEffect(() => {
-    setShuffledWords(shuffleArray(words));
-  }, [words])
+    localStorage.setItem('gameState', JSON.stringify(gameState));
+  }, [gameState]);
+
+  const startGame = (newWords?: Word[]) => {
+    setGameState(prevState => ({
+      gameRunning: true,
+      words: newWords || prevState.words
+    }));
+  };
+
+  const resetGame = () => {
+    setGameState({ gameRunning: false, words: [] });
+    localStorage.removeItem('quizProgress');
+  };
 
   return (
     <>
-      {!gameRunning && (
-        <UploadScreen setWords={setWords} startGame={() => setGameRunning(true)} />
+      {!gameState.gameRunning && (
+        <UploadScreen setWords={startGame} startGame={() => startGame()} />
       )}
-      {gameRunning && <Quiz words={shuffledWords} />}
+      {gameState.gameRunning && <Quiz initialWords={gameState.words} resetGame={resetGame} />}
     </>
   );
 }
