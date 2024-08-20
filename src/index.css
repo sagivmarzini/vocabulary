@@ -22,8 +22,8 @@ body {
 }
 
 .reset-btn {
-    position: absolute;
-    bottom: 16px;
+    position: relative;
+    /* bottom: 16px; */
     right: 50%;
     transform: translateX(50%);
     font-size: 1rem;
@@ -37,6 +37,7 @@ body {
     box-shadow: 0 4px 4px rgba(0, 0, 0, 0.2);
     cursor: pointer;
     transition: 0.2s;
+    margin: 2rem 0;
 }
 
 .reset-btn:hover {
