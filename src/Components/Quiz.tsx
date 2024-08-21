@@ -86,7 +86,7 @@ export default function Quiz({ initialWords, resetGame }: Props) {
 
   function checkAnswer(event: React.MouseEvent<HTMLButtonElement>) {
     const userAnswer = event.currentTarget.innerText;
-    
+
     if (userAnswer === gameState.correctAnswer) {
       correctSound.current.play();
       event.currentTarget.classList.add('correct');
@@ -94,11 +94,6 @@ export default function Quiz({ initialWords, resetGame }: Props) {
         const newProgress = prevState.progress + 1;
         const newLevel = newProgress > levelUpScore ? prevState.level + 1 : prevState.level;
         
-        setTimeout(() => {
-          const newIndex = (prevState.currentWordIndex + 1) % words.length;
-          nextWord(newIndex);
-        }, 1000);
-
         return {
           ...prevState,
           score: prevState.score + 1,
@@ -109,7 +104,13 @@ export default function Quiz({ initialWords, resetGame }: Props) {
           currentWordIndex: (prevState.currentWordIndex + 1) % words.length
         };
       });
-
+  
+      // Delay the nextWord call to ensure the UI updates
+      setTimeout(() => {
+        const newIndex = (gameState.currentWordIndex + 1) % words.length;
+        nextWord(newIndex);
+      }, 1000);
+  
       if (gameState.progress >= levelUpScore) {
         setTimeout(() => levelUpSound.current.play(), 300);
       }
