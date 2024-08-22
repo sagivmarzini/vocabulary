@@ -1,62 +1,62 @@
 .word-container {
-    padding: 64px 8px;
-    margin-top: 32px;
-    position: relative;
+  padding: 64px 8px;
+  margin-top: 32px;
+  position: relative;
 }
 
 .word-container::before {
-    content: '';
-    background-color: #2B2B2B;
-    width: 100%;
-    height: 120%;
-    position: absolute;
-    z-index: -1;
-    top: 0px;
-    right: 0;
-    border-radius: 2rem 2rem 0 0;
+  content: "";
+  background-color: #2b2b2b;
+  width: 100%;
+  height: 120%;
+  position: absolute;
+  z-index: -1;
+  top: 0px;
+  right: 0;
+  border-radius: 2rem 2rem 0 0;
 }
 
 .word-mask {
-    overflow: hidden;
-    padding: 8px 0;
+  overflow: hidden;
+  padding: 8px 0;
 }
 
 .word {
-    font-size: 2.5rem;
-    font-weight: 700;
-    color: white;
-    text-align: center;
-    animation: reveal 0.5s ease;
-    text-shadow: 0px 5px 6px rgba(0, 0, 0, 0.5);
-    cursor: pointer;
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: white;
+  text-align: center;
+  animation: reveal 0.5s ease;
+  text-shadow: 0px 5px 6px rgba(0, 0, 0, 0.5);
+  cursor: pointer;
 }
 
 @keyframes pop-up {
-    from {
-        opacity: 0;
-        transform: translateY(150%);
-    }   
-    to {
-        transform: none;
-    }
+  from {
+    opacity: 0;
+    transform: translateY(150%);
+  }
+  to {
+    transform: none;
+  }
 }
 
 @keyframes reveal {
-    from {
-        transform: translateY(100%);
-    }
+  from {
+    transform: translateY(100%);
+  }
 }
 
 .hiding-box {
-    width: 100vw;
-    height: 200px;
-    background-color: var(--background);
-    position: absolute;
-    top: 144px;
+  width: 100vw;
+  height: 200px;
+  background-color: var(--background);
+  position: absolute;
+  top: 144px;
 }
 
 @media (min-width: 600px) {
-    .word-container::before {
-        display: none;
-    }
+  .word-container::before {
+    display: none;
+  }
 }

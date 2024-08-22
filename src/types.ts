@@ -1,9 +1,9 @@
 export interface Word {
-    hebrew: string,
-    arabic: string
+  hebrew: string;
+  arabic: string;
 }
 
 export interface VocabFile {
-    name: string
-    path: string
+  name: string;
+  path: string;
 }
