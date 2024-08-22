@@ -10,53 +10,35 @@ interface Props {
 export default function Choices({ choices, checkAnswer }: Props) {
   const buttonsRef = useRef<HTMLButtonElement[]>([]);
 
-  // Map the buttons to the keyboard keys `q, w, a, s` respectively
   useEffect(() => {
+    const keyMap: { [key: string]: number } = {
+      q: 1,
+      w: 0,
+      a: 3,
+      s: 2,
+    };
+
     const handleKeyPress = (event: KeyboardEvent) => {
-      const choiceButtons = document.querySelectorAll(
-        ".choice-btn"
-      ) as NodeListOf<HTMLButtonElement>;
-      let buttonToClick: HTMLButtonElement | null = null;
-
-      switch (event.key) {
-        case "q":
-          buttonToClick = choiceButtons[1];
-          break;
-        case "w":
-          buttonToClick = choiceButtons[0];
-          break;
-        case "a":
-          buttonToClick = choiceButtons[3];
-          break;
-        case "s":
-          buttonToClick = choiceButtons[2];
-          break;
-        default:
-          break;
-      }
-
-      if (buttonToClick) {
-        buttonToClick.classList.add("active"); // Manually add the active class
-        buttonToClick.click();
-
-        setTimeout(() => {
-          buttonToClick.classList.remove("active"); // Remove the active class after a short delay
-        }, 150); // Adjust the delay to match your CSS transition duration
+      const index = keyMap[event.key];
+      if (index !== undefined) {
+        const button = buttonsRef.current[index];
+        if (button) {
+          button.classList.add("active");
+          button.click();
+          setTimeout(() => button.classList.remove("active"), 150);
+        }
       }
     };
 
     window.addEventListener("keydown", handleKeyPress);
-    return () => {
-      window.removeEventListener("keydown", handleKeyPress);
-    };
+    return () => window.removeEventListener("keydown", handleKeyPress);
   }, []);
 
   useEffect(() => {
-    resetClassNames(); // Reset class names whenever choices change
+    resetButtonStates();
   }, [choices]);
 
-  // Function to reset class names
-  const resetClassNames = () => {
+  const resetButtonStates = () => {
     buttonsRef.current.forEach((button) => {
       button.classList.remove("correct", "incorrect");
     });
