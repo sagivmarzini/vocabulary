@@ -48,7 +48,9 @@ export default function Choices({ choices, checkAnswer }: Props) {
     <div className="choices-container">
       {choices.map((choice, index) => (
         <ChoiceButton
-          ref={(el: any) => el && (buttonsRef.current[index] = el)}
+          ref={(el: HTMLButtonElement) =>
+            el && (buttonsRef.current[index] = el)
+          }
           onClick={checkAnswer}
           key={index}
         >
